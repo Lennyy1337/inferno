@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Game {
+  id          String   @unique
+  name        String
+  createdAt   DateTime @default(now())
+  players     Int
+  thumbnail   String
+  description String?
+  jobid       String
+}
+
+model pending_script {
+  id     String @id @default(uuid())
+  script String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model apikey {
+  key String @unique
+}
+
+model User {
+  id             String           @id @unique @default(uuid())
+  username       String
+  password       String /// @encrypted
+  passwordHash   String? /// @encryption:hash(password)
+  rId            String?
+  apikey         String           @unique @default(uuid())
+  sessions       Session[]
+  role           roles
+  pending_script pending_script[]
+}
+
+model roblox_ip {
+  ip String @id @unique
+}
+
+model Session {
+  user      User     @relation(fields: [userId], references: [id])
+  session   String   @unique
+  userId    String
+  createdAt DateTime @default(now())
+}
+
+enum roles {
+  OWNER
+  STAFF
+  WHITELISTED
+  NONE
+}

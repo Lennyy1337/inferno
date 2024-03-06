@@ -1,0 +1,28 @@
+{
+  "name": "r0zma",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch ./src/index.ts",
+    "build": "tsc",
+    "start": "node ./build/index.js",
+    "deploy": "tsc && node ./build/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^4.16.2",
+    "axios": "^1.6.7",
+    "crypto-random-string": "^5.0.0",
+    "fastify": "^4.26.2",
+    "noblox.js": "^4.15.1",
+    "prisma": "^5.10.2",
+    "prisma-field-encryption": "^1.5.2",
+    "undici": "^6.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24"
+  }
+}
