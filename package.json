@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "npx tsx watch ./src/index.ts",
-    "build": "tsc",
-    "start": "node ./build/index.js && npx prisma generate",
-    "deploy": "tsc && node ./build/index.js"
+    "build": "tsc && npx prisma generate",
+    "start": "node ./build/index.js ",
+    "deploy": "tsc && node ./build/index.js && npx prisma generate"
   },
   "keywords": [],
   "author": "",

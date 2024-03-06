@@ -10,8 +10,6 @@ COPY . .
 
 RUN npm install -g typescript
 
-RUN npm run build
-
 EXPOSE 5000
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "deploy"]
