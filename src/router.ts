@@ -4,7 +4,8 @@ import * as fs from 'fs';
 
 async function registerRoutes(fastify: FastifyInstance, options: any) {
   try {
-    const routesPath = path.join(__dirname, 'routes');
+    const routesPath = path.join(__dirname, './routes'); // Adjust the path as needed
+
     const registerRoutesInDirectory = (directoryPath: string) => {
       const files = fs.readdirSync(directoryPath);
 
@@ -14,9 +15,10 @@ async function registerRoutes(fastify: FastifyInstance, options: any) {
 
         if (isDirectory) {
           registerRoutesInDirectory(filePath);
-        } else if (file.endsWith('.r.ts')) {
+        } else if (file.endsWith('.r.js') || file.endsWith('.r.ts')) {
           const route = require(filePath).default;
           route(fastify, options);
+          console.log(`Added ${file}`);
         }
       });
     };

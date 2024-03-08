@@ -1,5 +1,5 @@
 import { prisma } from "../init/prisma"
-import cryptoRandomString from 'crypto-random-string';
+import { makeid } from "./makeid"
 
 export async function login(username: string, password: string){
     try{
@@ -17,7 +17,7 @@ export async function login(username: string, password: string){
         }
         const session = await prisma.session.create({
             data: {
-                session: `${cryptoRandomString({length: 100, type: 'url-safe'})}`,
+                session: `|_DO_NOT_SHARE_|${makeid(100)}`,
                 userId: user.id
             }
         })
