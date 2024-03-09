@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
 
 async function routes(fastify: FastifyInstance, options: any) {
-    fastify.post('/version', (request, reply) => {
+    fastify.get('/version', (request, reply) => {
         reply.send({version: "v1"})
     });
 }
