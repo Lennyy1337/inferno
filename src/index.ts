@@ -11,6 +11,10 @@ dotenv.config();
 deletesession()
 deletegame()
 
+fastify.addHook('onSend', (request, reply, payload, next) => {
+  reply.header('Content-Security-Policy', "default-src 'self' 'unsafe-inline' data:; connect-src 'self' misc-cozmo.yhsvrh.easypanel.host;");
+  next();
+});
 
 fastify.register(registerRoutes);
 const port = process.env.PORT as any;
