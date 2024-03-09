@@ -12,7 +12,7 @@ deletesession()
 deletegame()
 
 fastify.addHook('onSend', (request, reply, payload, next) => {
-  reply.header('Content-Security-Policy', "default-src 'self' 'unsafe-inline' data:; connect-src 'self' misc-cozmo.yhsvrh.easypanel.host;");
+  reply.header('Content-Security-Policy', "default-src 'self' 'unsafe-inline' data:; connect-src 'self' misc-cozmo.yhsvrh.easypanel.host; report-to /csp-report-endpoint");
   next();
 });
 
