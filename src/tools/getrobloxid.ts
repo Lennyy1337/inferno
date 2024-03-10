@@ -19,5 +19,6 @@ export async function getid(username: string) {
         return await id
     } catch (e) {
         console.error(e);
+        return 1
     }
 }
