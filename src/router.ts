@@ -4,7 +4,7 @@ import * as fs from 'fs';
 
 async function registerRoutes(fastify: FastifyInstance, options: any) {
   try {
-    const routesPath = path.join(__dirname, './routes'); // Adjust the path as needed
+    const routesPath = path.join(__dirname, './routes'); 
 
     const registerRoutesInDirectory = (directoryPath: string) => {
       const files = fs.readdirSync(directoryPath);

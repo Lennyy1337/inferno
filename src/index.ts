@@ -5,11 +5,18 @@ import { fastify } from './init/fastify';
 import registerRoutes from './router';
 import { deletesession } from './tools/deleteoldSessions';
 import { checkRblxIp } from './tools/checkRblxIp';
+import helmet from '@fastify/helmet'
+import cors from '@fastify/cors'
 
 dotenv.config();
 
 deletesession()
 deletegame()
+
+
+fastify.register(cors, { 
+  
+})
 
 fastify.register(registerRoutes);
 const port = process.env.PORT as any;
