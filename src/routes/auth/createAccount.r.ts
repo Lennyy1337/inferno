@@ -7,7 +7,6 @@ async function routes(fastify: FastifyInstance, options: any) {
       const body: any = request.body
       if(!body){
         return {success: false, message: "No body", code: "NO_BODY"}
-        
       }
       const username = body.username
       const password = body.password
