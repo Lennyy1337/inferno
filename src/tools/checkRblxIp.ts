@@ -18,6 +18,7 @@ export async function checkRblxIp(ip: string){
             return false
         }
         const ipdata = await (await axios.get(`http://ip-api.com/json/${ip}?fields=status,message,isp,org,as,query`)).data
+        console.log(ipdata)
 
         if(ipdata.status !== "SUCCESS"){
             return false
