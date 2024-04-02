@@ -1,2 +1,1 @@
-- Game logging
 - Script hub

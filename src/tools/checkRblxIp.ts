@@ -9,7 +9,6 @@ export async function checkRblxIp(ip: string){
             }
         })
         if(check){
-            console.log("IP CACHE HIT X1")
             return true
         }
 
@@ -22,7 +21,7 @@ export async function checkRblxIp(ip: string){
             return false
         }
         if(!ipdata.as.includes("AS22697")){
-            console.log("Rip")
+            console.log(ip)
             return false
         }
 
