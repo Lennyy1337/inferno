@@ -2,6 +2,14 @@ import { FastifyInstance } from 'fastify';
 import undici from 'undici'
 import { prisma } from '../../init/prisma';
 import { checkRblxIp } from '../../tools/checkRblxIp';
+import { Embed, EmbedBuilder, WebhookClient } from 'discord.js'
+import { getGameData } from '../../tools/getGameData';
+import { getThumbnail } from '../../tools/getThumbnail';
+import { RobloxApiResponse } from '../../types/robloxApiResponse';
+
+const webhook = new WebhookClient({ url: process.env.WEBHOOK as string });
+
+
 async function routes(fastify: FastifyInstance, options: any) {
   fastify.post('/v1/games', async (request, reply) => {
     try{
@@ -16,86 +24,53 @@ async function routes(fastify: FastifyInstance, options: any) {
         }
         
         const roblox_id = request.headers['roblox-id'];
-
-        const { placeid, jobid }: any = request.body
-
+        console.log(request.body)
+        const { placeid, jobid, gameid }: any = request.body
+        console.log(placeid, jobid, gameid)
         if(!roblox_id){
-            reply.send({success: false, message: "Invalid Request", code: "NO_ROBLOX_ID_HEADER"})
+            reply.send({success: false, message: "Invalid Request", code: "MISSING_ROBLOX_ID"})
+            return
         }
+        if(!placeid || !jobid || !gameid){
+            
+            reply.send({success: false, message: "Invalid Request", code: "INVALID_REQUEST"})
+            return
+            
+        }
+        const gamedata: RobloxApiResponse = await getGameData(gameid)
+        const thumbnail = await getThumbnail(placeid)
 
-        const thumbnailraw = await undici.request(`https://thumbnails.roblox.com/v1/assets?assetIds=${roblox_id}&returnPolicy=PlaceHolder&size=480x270&format=Png&isCircular=false`);
-        const thumbnailraw2 : any= await thumbnailraw.body.json();
+        if(gamedata.playing == undefined){
+            reply.send({success: false, message: "Roblox api error", code: "ROBLOX_ERROR"})
+            return
+        }  
+        let desc = gamedata.sourceDescription
+        if(desc == ""){
+            desc = "No Description Provided."
+        }else{
+            desc = gamedata.sourceDescription
+        }
         
-        if (!thumbnailraw2.data || thumbnailraw2.data.length === 0) {
-            reply.send({ success: false, message: "No thumbnail information found" });
-            return;
-        }
+        const joincode = `javascript:Roblox.GameLauncher.joinGameInstance("${placeid}","${jobid}");`
+        const embed: EmbedBuilder = new EmbedBuilder()
+            .setTitle(gamedata.sourceName)
+            .setURL(`https://www.roblox.com/games/${gamedata.rootPlaceId}`)
+            .setFields(
+                { name: "Players:", value: `${gamedata.playing.toString()}` },
+                { name: "Description:", value: `${desc}` },
+                { name: "Join Game:", value:  "`" + joincode + "`"}
+            )
+            .setImage(thumbnail);
 
-        let thumbnail: any = thumbnailraw2.data[0].imageUrl;
+        await webhook.send({
+            content: "New Game Logged!",
+            username: "Infernus SS",
+            embeds: [embed.toJSON()]
+        });
 
-        const universeraw = await undici.request(`https://apis.roblox.com/universes/v1/places/${placeid}/universe`);
-        const universeraw2 = await universeraw.body.json();
-        const universeid = (universeraw2 as any).universeId;
 
-        if (!universeid) {
-            reply.send({ success: false, message: "No universe information found" });
-            return;
-        }
+    
 
-        let description = "no description provided";
-
-        const gameinforaw = await undici.request(`https://games.roblox.com/v1/games?universeIds=${universeid}`);
-        const gameinforaw2 = await gameinforaw.body.json();
-        const gameinfoArray = (gameinforaw2 as any).data;
-
-        if (!gameinfoArray || gameinfoArray.length === 0) {
-            reply.send({ success: false, message: "No game information found" });
-            return;
-        }
-
-        const gameinfo = gameinfoArray[0];
-
-        if (gameinfo.description) {
-            description = gameinfo.description.toString();
-        }
-
-        if (!description) {
-            description = "No description provided.";
-        }
-
-        if (thumbnail.includes("https://s3.amazonaws.com/images.roblox.com/325472601571f31e1bf00674c368d335.gif")) {
-                    thumbnail = "https://t6.rbxcdn.com/1805a317a83eb68ca9654de3e8bfc446";
-        }
-
-        const checkExistingGame = await prisma.game.findFirst({
-            where: {
-                id: roblox_id as string
-            }
-        })
-        if(checkExistingGame){
-            await prisma.game.update({
-                where: {
-                    id: roblox_id as string
-                },
-                data: {
-                    createdAt: new Date(),
-                    jobid: jobid
-                }
-            })
-        }
-        if(!checkExistingGame){
-            await prisma.game.create({
-                data: {
-                    id: roblox_id as string,
-                    name: gameinfo.name,
-                    players: gameinfo.playing,
-                    thumbnail: thumbnail,
-                    jobid: jobid,
-                    description: description
-                }
-            })
-        
-        }
         reply.send({success: true, message: "Game Added!", code: "SUCCESS"})
     }catch(e){
         reply.send({success: false, message: "Error!", code: "UNKNOWN_ERROR"})

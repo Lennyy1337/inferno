@@ -1,4 +1,3 @@
-import { deletegame } from './tools/deleteoldgame';
 import { prisma } from './init/prisma';
 import dotenv from 'dotenv';
 import { fastify } from './init/fastify';
@@ -11,7 +10,6 @@ import cors from '@fastify/cors'
 dotenv.config();
 
 deletesession()
-deletegame()
 
 
 fastify.register(cors, { 

@@ -10,16 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Game {
-  id          String   @unique
-  name        String
-  createdAt   DateTime @default(now())
-  players     Int
-  thumbnail   String
-  description String?
-  jobid       String
-}
-
 model pending_script {
   id     String @id @default(uuid())
   script String

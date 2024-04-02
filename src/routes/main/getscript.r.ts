@@ -5,7 +5,7 @@ import { checkRblxIp } from '../../tools/checkRblxIp';
 async function routes(fastify: FastifyInstance, options: any) {
   fastify.get('/v1/get-script/:id', async (request, reply) => {
     const ipcheck = await checkRblxIp(request.ip)
-    console.log(request.ip)
+    console.log(ipcheck)
     if(!ipcheck){
         reply.send({success: false, message: "Request is coming from an unallowed Ip.", code: "IP_NOT_ALLOWED"})
         return

@@ -8,7 +8,6 @@ export async function checkRblxIp(ip: string){
                 ip: ip
             }
         })
-        console.log(ip)
         if(check){
             console.log("IP CACHE HIT X1")
             return true
@@ -18,12 +17,12 @@ export async function checkRblxIp(ip: string){
             return false
         }
         const ipdata = await (await axios.get(`http://ip-api.com/json/${ip}?fields=status,message,isp,org,as,query`)).data
-        console.log(ipdata)
-
-        if(ipdata.status !== "SUCCESS"){
+        if(ipdata.status !== "success"){
+            console.log("😭😭 broke 😭😭") 
             return false
         }
-        if(!ipdata.as.includes("Roblox") || !ipdata.as.includes("AS22697") || !ipdata.org.includes("Roblox") || !ipdata.isp.includes("Roblox")){
+        if(!ipdata.as.includes("AS22697")){
+            console.log("Rip")
             return false
         }
 
