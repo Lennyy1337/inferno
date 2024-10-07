@@ -16,8 +16,9 @@ You will need to code your own frontend to use this, as this is only an API.
 
 1. Install [Node.js](https://nodejs.org/) if you haven't already.
 2. Run:  
-   ```bash
-   npm i
+  ```bash
+  npm i
+  ```
 
 # Development
 
