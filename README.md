@@ -42,3 +42,5 @@ To start the backend, run:
   ```bash
   npm run start
   ```
+
+**This project is abandoned. There will be no new updates or bug fixes.**
